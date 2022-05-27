@@ -7,6 +7,7 @@ function settingsBill() {
   var critical = 0;
   var callTotal = 0;
   var smsTotal = 0;
+  var total = 0;
 
 
   function setcallCost(callCost){
@@ -21,7 +22,7 @@ function settingsBill() {
   function returnSms(){
     return smsValue;
   }
-  function warningValue(warnLevel){
+  function getwarningValue(warnLevel){
     warning = warnLevel;
   }
   function returnWarning(){
@@ -46,13 +47,21 @@ function settingsBill() {
     return smsTotal;
   }
   function getTotal(){
-    return smsTotal + callTotal;
+    total = smsTotal + callTotal;
+    return total;
   }
-
+  function indicateState(){
+    if(getTotal() >= returnWarning()){
+      return "warning"
+    }
+    else if(getTotal() >= returnCritical()){
+      return "danger"
+    }
+  }
   return {
     returnCritical,
     getCriticalValue,
-    warningValue,
+    getwarningValue,
     returnWarning,
     returnSms,
     setsmsCost,
@@ -62,7 +71,9 @@ function settingsBill() {
     makeSms,
     getSmsTotal,
     makeCall,
-    getTotal
+    getTotal,
+    indicateState,
+
   }
 
 }

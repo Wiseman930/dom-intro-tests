@@ -22,7 +22,7 @@ it ('should get the sms cost', function(){
 it ('should get the warning value', function(){
     let setcall = settingsBill();
 
-    setcall.warningValue(3);
+    setcall.getwarningValue(3);
     assert.equal(3, setcall.returnWarning());
 
 })
@@ -64,7 +64,7 @@ describe('the settings Bill function, using Values', function(){
         assert.equal(4.5, setcall.getSmsTotal())
 
 })
-it ("it should get the total cost of 3 sms's  and 3 calls", function(){
+it ("it should get the total cost of 3 sms's  and 3 calls and the grand total", function(){
     let setcall = settingsBill();
 
     setcall.setsmsCost(1.5);
@@ -76,8 +76,51 @@ it ("it should get the total cost of 3 sms's  and 3 calls", function(){
     setcall. makeCall();
     setcall. makeCall();
 
-    assert.equal(12, setcall.getTotal())
+    assert.equal(12, setcall.getTotal());
+    assert.equal(4.5, setcall.getSmsTotal());
+    assert.equal(7.5, setcall.getCallTotal())
+
 
 })
+it ("it should return warning, when the total cost is equal to or greater than warning value", function(){
+    let setcall = settingsBill();
 
+    setcall.getwarningValue(7);
+    setcall.setsmsCost(1.5);
+    setcall.setcallCost(2.5)
+    setcall. makeSms();
+    setcall. makeSms();
+    setcall. makeSms();
+    setcall. makeCall();
+    setcall. makeCall();
+    setcall. makeCall();
+
+    assert.equal(12, setcall.getTotal());
+    assert.equal(4.5, setcall.getSmsTotal());
+    assert.equal(7.5, setcall.getCallTotal())
+    assert.equal('warning', setcall.indicateState())
+
+
+})
+it ("it should return danger, when the total cost is equal to or greater than critical value", function(){
+    let setcall = settingsBill();
+
+    setcall.getCriticalValue(6)
+    setcall.getwarningValue(3);
+    setcall.setsmsCost(1.5);
+    setcall.setcallCost(2.5)
+    setcall. makeSms();
+    setcall. makeSms();
+    setcall. makeSms();
+    setcall. makeCall();
+    setcall. makeCall();
+    setcall. makeCall();
+
+    assert.equal(12, setcall.getTotal());
+    assert.equal(4.5, setcall.getSmsTotal());
+    assert.equal(7.5, setcall.getCallTotal())
+    assert.equal('warning', setcall.indicateState())
+
+
+})
 })
