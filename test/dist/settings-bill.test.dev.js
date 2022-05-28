@@ -37,6 +37,7 @@ describe('the settings Bill function, making values', function () {
 describe('the settings Bill function, using Values', function () {
   it('it should get the total callcost of 3 calls of 2.5 each', function () {
     var setcall = settingsBill();
+    setcall.getCriticalValue(9);
     setcall.setcallCost(2.5);
     setcall.makeCall();
     setcall.makeCall();
@@ -45,6 +46,7 @@ describe('the settings Bill function, using Values', function () {
   });
   it("it should get the total smscost of 3 sms's of 1.5 each", function () {
     var setcall = settingsBill();
+    setcall.getCriticalValue(9);
     setcall.setsmsCost(1.5);
     setcall.makeSms();
     setcall.makeSms();
@@ -53,6 +55,7 @@ describe('the settings Bill function, using Values', function () {
   });
   it("it should get the total cost of 3 sms's  and 3 calls and the grand total", function () {
     var setcall = settingsBill();
+    setcall.getCriticalValue(9);
     setcall.setsmsCost(1.5);
     setcall.setcallCost(2.5);
     setcall.makeSms();
@@ -61,13 +64,14 @@ describe('the settings Bill function, using Values', function () {
     setcall.makeCall();
     setcall.makeCall();
     setcall.makeCall();
-    assert.equal(12, setcall.getTotal());
+    assert.equal(9.5, setcall.getTotal());
     assert.equal(4.5, setcall.getSmsTotal());
-    assert.equal(7.5, setcall.getCallTotal());
+    assert.equal(5, setcall.getCallTotal());
   });
   it("it should return warning, when the total cost is equal to or greater than warning value", function () {
     var setcall = settingsBill();
     setcall.getwarningValue(7);
+    setcall.getCriticalValue(8);
     setcall.setsmsCost(1.5);
     setcall.setcallCost(2.5);
     setcall.makeSms();
@@ -76,15 +80,15 @@ describe('the settings Bill function, using Values', function () {
     setcall.makeCall();
     setcall.makeCall();
     setcall.makeCall();
-    assert.equal(12, setcall.getTotal());
+    assert.equal(9.5, setcall.getTotal());
     assert.equal(4.5, setcall.getSmsTotal());
-    assert.equal(7.5, setcall.getCallTotal());
-    assert.equal('warning', setcall.indicateState());
+    assert.equal(5, setcall.getCallTotal());
+    assert.equal('warning', setcall.indicateWarningState());
   });
   it("it should return danger, when the total cost is equal to or greater than critical value", function () {
     var setcall = settingsBill();
-    setcall.getCriticalValue(6);
-    setcall.getwarningValue(3);
+    setcall.getCriticalValue(7);
+    setcall.getwarningValue(5);
     setcall.setsmsCost(1.5);
     setcall.setcallCost(2.5);
     setcall.makeSms();
@@ -93,9 +97,24 @@ describe('the settings Bill function, using Values', function () {
     setcall.makeCall();
     setcall.makeCall();
     setcall.makeCall();
-    assert.equal(12, setcall.getTotal());
+    assert.equal(7, setcall.getTotal());
     assert.equal(4.5, setcall.getSmsTotal());
-    assert.equal(7.5, setcall.getCallTotal());
-    assert.equal('warning', setcall.indicateState());
+    assert.equal(2.5, setcall.getCallTotal());
+    assert.equal('critical', setcall.indicateCriticalState());
+  });
+  it("no added call or sms after the critical value", function () {
+    var setcall = settingsBill();
+    setcall.getCriticalValue(4);
+    setcall.setsmsCost(1.5);
+    setcall.setcallCost(2.5);
+    setcall.makeSms();
+    setcall.makeSms();
+    setcall.makeSms();
+    setcall.makeCall();
+    setcall.makeSms();
+    setcall.makeSms();
+    assert.equal(4.5, setcall.getTotal());
+    assert.equal(4.5, setcall.getSmsTotal());
+    assert.equal(0, setcall.getCallTotal());
   });
 });

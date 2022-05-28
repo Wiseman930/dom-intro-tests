@@ -35,13 +35,17 @@ function settingsBill() {
     return critical;
   }
   function makeCall(){
-    callTotal += callValue;
+    if (getTotal() < returnCritical()){
+      callTotal += callValue;
+      }
   }
   function getCallTotal(){
       return callTotal;
   }
   function makeSms() {
-    smsTotal += smsValue;
+    if (getTotal() < returnCritical()){
+      smsTotal += smsValue;
+      }
   }
   function getSmsTotal() {
     return smsTotal;
@@ -50,14 +54,17 @@ function settingsBill() {
     total = smsTotal + callTotal;
     return total;
   }
-  function indicateState(){
-    if(getTotal() >= returnWarning()){
-      return "warning"
+  function indicateWarningState(){
+  if(getTotal() >= returnWarning() && returnCritical() > returnWarning() ){
+    return "warning"
     }
-    else if(getTotal() >= returnCritical()){
-      return "danger"
-    }
+
   }
+function indicateCriticalState(){
+ if(getTotal() >= returnCritical() && returnCritical() > returnWarning()){
+      return "critical"
+      }
+    }
   return {
     returnCritical,
     getCriticalValue,
@@ -72,7 +79,8 @@ function settingsBill() {
     getSmsTotal,
     makeCall,
     getTotal,
-    indicateState,
+    indicateWarningState,
+    indicateCriticalState,
 
   }
 
